@@ -17,6 +17,7 @@ beingAttackedFlag = False
 while True:
 	incorrectPW = input('Password: ')
 	incorrectCombine = salt[0] + (incorrectPW * multiplier) + salt[1]
+	print (incorrectCombine)
 	incorrectHashOutput = tlsh.forcehash(incorrectCombine.encode("utf-8"))
 	diff = tlsh.diff(hashOutput , incorrectHashOutput)
 	print ('Attempted password: ' + incorrectPW)
