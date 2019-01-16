@@ -1,3 +1,4 @@
 salt.txt
-secrets.py
+testing/secretStuff.py
 __pycache__
+.~lock*
