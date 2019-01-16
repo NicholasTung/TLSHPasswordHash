@@ -1,6 +1,6 @@
 import tlsh
 import mysql.connector
-import secrets
+import secretStuff
 import os
 import string
 from base64 import b64encode
@@ -144,12 +144,12 @@ def register():
     while (retryPass):
         newUserPassword = str(input("Enter a password: "))
 
-        invalidChars = set(string.punctuation)
+        validChars = set(string.punctuation)
         uppers = [l for l in newUserPassword if l.isupper()]
 
         if (len(newUserPassword) < 9):
             print ("Must be at least 9 characters long")
-        elif not any(char in invalidChars for char in newUserPassword):
+        elif not any(char in validChars for char in newUserPassword):
             print ("Must have at least 1 special character. Try again.")
         elif len(uppers) == 0:
             print ("Must have at least 1 capital letter. Try again.")
