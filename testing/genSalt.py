@@ -1,5 +1,4 @@
 import os
-import MySQLdb
 from base64 import b64encode
 
 saltArr = []
