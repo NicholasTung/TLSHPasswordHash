@@ -68,7 +68,7 @@ for password in csvinput['Password']:
     while True:
         if password[firstCap] in string.ascii_letters and password[secondCap] in string.ascii_letters:
             twoCapMistake.append([password[:min(firstCap, secondCap)] + toggleCapitalization(password[firstCap] + password[min(firstCap, secondCap) + 1:max(firstCap, secondCap)])
-                                 + toggleCapitalization(password[secondCap]) + password[min(firstCap, secondCap) + 1:]])
+                                 + toggleCapitalization(password[secondCap]) + password[max(firstCap, secondCap) + 1:]])
             
             break
         else:
@@ -77,24 +77,24 @@ for password in csvinput['Password']:
             elif password[secondCap] not in string.ascii_letters:
                 secondCap = secrets.randbelow(len(password))
 #########################################################################################################
-    firstSubPunc = secrets.randbelow(len(password))
-    while True:
-        secondSubPunc = secrets.randbelow(len(password))
-        if secondSubPunc == firstSubPunc:
-            secondSubPunc = secrets.randbelow(len(password))
-        else:
-            break
-    while True:
-        if password[firstSubPunc] in string.punctuation and password[secondSubPunc] in string.punctuation:
-            subPunctuation.append([password[:min(firstSubPunc, secondSubPunc)] + secrets.choice(string.ascii_letters) + password[(min(firstSubPunc, secondSubPunc) + 1):max(firstSubPunc, secondSubPunc)]
-                                  + secrets.choice(string.ascii_letters) + password[max(firstSubPunc, secondSubPunc) + 1:]])
+    # firstSubPunc = secrets.randbelow(len(password))
+    # while True:
+    #     secondSubPunc = secrets.randbelow(len(password))
+    #     if secondSubPunc == firstSubPunc:
+    #         secondSubPunc = secrets.randbelow(len(password))
+    #     else:
+    #         break
+    # while True:
+    #     if password[firstSubPunc] in string.punctuation and password[secondSubPunc] in string.punctuation:
+    #         subPunctuation.append([password[:min(firstSubPunc, secondSubPunc)] + secrets.choice(string.ascii_letters) + password[(min(firstSubPunc, secondSubPunc) + 1):max(firstSubPunc, secondSubPunc)]
+    #                               + secrets.choice(string.ascii_letters) + password[max(firstSubPunc, secondSubPunc) + 1:]])
             
-            break
-        else:
-            if password[firstSubPunc] not in string.punctuation:
-                firstSubPunc = secrets.randbelow(len(password))
-            elif password[secondSubPunc] not in string.punctuation:
-                secondSubPunc = secrets.randbelow(len(password))
+    #         break
+    #     else:
+    #         if password[firstSubPunc] not in string.punctuation:
+    #             firstSubPunc = secrets.randbelow(len(password))
+    #         elif password[secondSubPunc] not in string.punctuation:
+    #             secondSubPunc = secrets.randbelow(len(password))
 
 #########################################################################################################
 
@@ -110,8 +110,8 @@ csvinput['twoDeletion'] = csvinput['twoDeletion'].apply(' '.join)
 csvinput['twoCapMistake'] = twoCapMistake
 csvinput['twoCapMistake'] = csvinput['twoCapMistake'].apply(' '.join)
 
-csvinput['subPunctuation'] = subPunctuation
-csvinput['subPunctuation'] = csvinput['subPunctuation'].apply(' '.join)
+# csvinput['subPunctuation'] = subPunctuation
+# csvinput['subPunctuation'] = csvinput['subPunctuation'].apply(' '.join)
 
 csvinput.to_csv("randomlyGeneratedPasswords.csv", index = False, quoting = csv.QUOTE_ALL)
 

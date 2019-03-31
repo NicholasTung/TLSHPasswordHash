@@ -39,14 +39,14 @@ for password in csvinput['Password']:
     	else:
     		cap = secrets.randbelow(len(password))
 
-    subPunc = secrets.randbelow(len(password))
-    while True:
-    	if password[subPunc] in string.punctuation:
-    		subPunctuation.append([password[:sub] + secrets.choice(string.ascii_letters) + password[(sub + 1):]])
+    # subPunc = secrets.randbelow(len(password))
+    # while True:
+    # 	if password[subPunc] in string.punctuation:
+    # 		subPunctuation.append([password[:sub] + secrets.choice(string.ascii_letters) + password[(sub + 1):]])
 
-    		break
-    	else:
-    		subPunc = secrets.randbelow(len(password))
+    # 		break
+    # 	else:
+    # 		subPunc = secrets.randbelow(len(password))
 
 
 
@@ -62,8 +62,8 @@ csvinput['oneDeletion'] = csvinput['oneDeletion'].apply(' '.join)
 csvinput['oneCapMistake'] = oneCapMistake
 csvinput['oneCapMistake'] = csvinput['oneCapMistake'].apply(' '.join)
 
-csvinput['subPunctuation'] = subPunctuation
-csvinput['subPunctuation'] = csvinput['subPunctuation'].apply(' '.join)
+# csvinput['subPunctuation'] = subPunctuation
+# csvinput['subPunctuation'] = csvinput['subPunctuation'].apply(' '.join)
 
 csvinput.to_csv("randomlyGeneratedPasswords.csv", index = False, quoting = csv.QUOTE_ALL)
 

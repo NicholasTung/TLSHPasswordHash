@@ -11,7 +11,7 @@ twoDeletionDiffernce = list()
 twoSubstitutionDifference = list()
 incorrectDifference = list()
 twoCapDifference = list()
-subPuncDifference = list()
+# subPuncDifference = list()
 
 multiplier = 5
 
@@ -38,15 +38,15 @@ for password in csvinput["Password"]:
 	capStr = csvinput.loc[csvinput["Password"] == password, 'twoCapMistake'].values[0]
 	capStrHashed = tlsh.forcehash((prefixSalt + (capStr * multiplier) + suffixSalt).encode("utf-8"))
 
-	subPuncStr = csvinput.loc[csvinput["Password"] == password, 'subPunctuation'].values[0]
-	subPuncHashed = tlsh.forcehash((prefixSalt + (subPuncStr * multiplier) + suffixSalt).encode("utf-8"))
+	# subPuncStr = csvinput.loc[csvinput["Password"] == password, 'subPunctuation'].values[0]
+	# subPuncHashed = tlsh.forcehash((prefixSalt + (subPuncStr * multiplier) + suffixSalt).encode("utf-8"))
 
 	twoInsertionDifference.append(tlsh.diff(passwordHashed, insertionStrHashed))
 	twoDeletionDiffernce.append(tlsh.diff(passwordHashed, deletionStrHashed))
 	twoSubstitutionDifference.append(tlsh.diff(passwordHashed, substitutionStrHashed))
 	incorrectDifference.append(tlsh.diff(passwordHashed, incorrectStrHashed))
 	twoCapDifference.append(tlsh.diff(passwordHashed, capStrHashed))
-	subPuncDifference.append(tlsh.diff(passwordHashed, subPuncHashed))
+	# subPuncDifference.append(tlsh.diff(passwordHashed, subPuncHashed))
 
 csvinput['twoSubstitutionDifference'] = pd.Series(twoSubstitutionDifference, dtype = int)
 #csvinput['twoSubstitutionDifference'] = csvinput['twoSubstitutionDifference'].str[0]
@@ -62,7 +62,7 @@ csvinput['twoDeletionDiffernce'] = pd.Series(twoDeletionDiffernce, dtype = int)
 
 csvinput['twoCapDifference'] = pd.Series(twoCapDifference, dtype = int)
 
-csvinput['subPuncDifference'] = pd.Series(subPuncDifference, dtype = int)
+# csvinput['subPuncDifference'] = pd.Series(subPuncDifference, dtype = int)
 
 csvinput['incorrectDifference'] = pd.Series(incorrectDifference, dtype = int)
 #csvinput['incorrectDifference'] = csvinput["incorrectDifference"].str[0]
