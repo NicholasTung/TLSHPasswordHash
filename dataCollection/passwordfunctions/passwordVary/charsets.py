@@ -1,3 +1,5 @@
+import string
+
 specialChars = list(string.punctuation)
 specialChars.remove(",")
 

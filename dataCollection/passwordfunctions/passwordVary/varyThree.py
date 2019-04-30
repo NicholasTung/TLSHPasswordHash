@@ -1,6 +1,6 @@
 import string
 import secrets
-import charsets
+from . import charsets
 
 allChars = charsets.allChars
 
@@ -24,32 +24,32 @@ def genThree(pw):
     return indices
 
 def insertThree(password):
-	indices = genThree(password)
+    indices = genThree(password)
 
-    return password[indices[0]] + secrets.choice(allChars) + password[indices[0] + 1:indices[1]]
-                         + secrets.choice(allChars) + password[indices[1]:indices[2]] 
+    return password[indices[0]] + secrets.choice(allChars) + password[indices[0] + 1:indices[1]]\
+                         + secrets.choice(allChars) + password[indices[1]:indices[2]]\
                          + secrets.choice(allChars) + password[indices[2]:]
 
 def substituteThree(password):
-	indices = genThree(password)
+    indices = genThree(password)
     
-    return password[:indices[0]] + secrets.choice(allChars) + password[indices[0] + 1:indices[1]]
-                         + secrets.choice(allChars) + password[indices[1] + 1:indices[2]]
+    return password[:indices[0]] + secrets.choice(allChars) + password[indices[0] + 1:indices[1]]\
+                         + secrets.choice(allChars) + password[indices[1] + 1:indices[2]]\
                          + secrets.choice(allChars) + password[indices[2] + 1:]
 
 def deleteThree(password):
-	indices = genThree(password)
+    indices = genThree(password)
     
-    return password[:indices[0]] + password[indices[0] + 1:indices[1]]
+    return password[:indices[0]] + password[indices[0] + 1:indices[1]]\
                          + password[indices[1] + 1:indices[2]] + password[indices[2] + 1:]
 
 def capitalizeThree(password):
-	indices = genThree(password)
+    indices = genThree(password)
     
     while True:
         if password[indices[0]] in string.ascii_letters and password[indices[1]] in string.ascii_letters and password[indices[2]] in string.ascii_letters:
-            return password[:indices[0]] + toggleCapitalization(password[indices[0]]) + password[indices[0] + 1:indices[1]]
-                         + toggleCapitalization(password[indices[1]]) + password[indices[1] + 1:indices[2]]
+            return password[:indices[0]] + toggleCapitalization(password[indices[0]]) + password[indices[0] + 1:indices[1]]\
+                         + toggleCapitalization(password[indices[1]]) + password[indices[1] + 1:indices[2]]\
                          + toggleCapitalization(password[indices[2]]) + password[indices[2] + 1:]
             
             break
