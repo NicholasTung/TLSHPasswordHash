@@ -44,7 +44,8 @@ multiplier = 5
 passwordsColumns = ["password", "prefixSalt", "suffixSalt", 
                     "oneInsert", "oneDelete", "oneSubstitute", "oneCapitalize", 
                     "twoInsert", "twoDelete", "twoSubstitute", "twoCapitalize", 
-                    "threeInsert", "threeDelete", "threeSubstitute", "threeCapitalize"]
+                    "threeInsert", "threeDelete", "threeSubstitute", "threeCapitalize",
+                    "incorrect"]
 passwords = pandas.DataFrame(columns = passwordsColumns)
 
 for baseCol in passwordsColumns[0:3]:
@@ -68,10 +69,13 @@ for varyCol3 in passwordsColumns[11:15]:
     fvaryCol3 = splitName3[1].lower() + splitName3[0].capitalize()
     passwords[varyCol3] = makeVarySeries("password", getattr(pv3, fvaryCol3), passwords)
 
+passwords["incorrect"] = pandas.Series(pwsGenerator(pg.genPassword, iterations))
+
 hashedColumns = ["password",
                  "oneInsert", "oneDelete", "oneSubstitute", "oneCapitalize", 
                  "twoInsert", "twoDelete", "twoSubstitute", "twoCapitalize", 
-                 "threeInsert", "threeDelete", "threeSubstitute", "threeCapitalize"]
+                 "threeInsert", "threeDelete", "threeSubstitute", "threeCapitalize",
+                 "incorrect"]
 hashed = pandas.DataFrame(columns = hashedColumns)
 
 for hashCol in hashedColumns:
@@ -79,19 +83,23 @@ for hashCol in hashedColumns:
 
 dataColumns = ["oneInsertDifference", "oneDeleteDifference", "oneSubstituteDifference", "oneCapitalizeDifference", 
                "twoInsertDifference", "twoDeleteDifference", "twoSubstituteDifference", "twoCapitalizeDifference", 
-               "threeInsertDifference", "threeDeleteDifference", "threeSubstituteDifference", "threeCapitalizeDifference"]
+               "threeInsertDifference", "threeDeleteDifference", "threeSubstituteDifference", "threeCapitalizeDifference",
+               "incorrectDifference"]
 data = pandas.DataFrame(columns = dataColumns, dtype=float)
 
 for dataCol in dataColumns:
     data[dataCol] = makeDiffSeries(dataCol, hashed)
 
+data = data.replace(0, pandas.np.nan).dropna()
+
 print(passwords)
 print(hashed)
 print(data)
+print(data.loc[data["threeCapitalizeDifference"].idxmin()])
 
 passwords.to_pickle("~/git/TLSHPasswordHash/dataCollection/dataframePickles/passwords.pkl")
 hashed.to_pickle("~/git/TLSHPasswordHash/dataCollection/dataframePickles/hashed.pkl")
-passwords.to_pickle("~/git/TLSHPasswordHash/dataCollection/dataframePickles/data.pkl")
+data.to_pickle("~/git/TLSHPasswordHash/dataCollection/dataframePickles/data.pkl")
 
 
 
