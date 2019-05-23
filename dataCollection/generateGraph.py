@@ -1,10 +1,46 @@
+import matplotlib
 import matplotlib.pyplot as plt
+from matplotlib.ticker import StrMethodFormatter
+import matplotlib.font_manager as font_manager
 import pandas as pd
 import pickle
 import numpy as np
 
 prefix = ("one", "two", "three")
 suffix = ("SubstituteDifference", "InsertDifference", "DeleteDifference", "CapitalizeDifference")
+
+fontpath = '/usr/share/fonts/nerd-fonts-complete/otf/Fura Code Light Nerd Font Complete.otf'
+
+fsize = (10, 7)
+
+prop = font_manager.FontProperties(fname=fontpath)
+matplotlib.rcParams['font.family'] = prop.get_name()
+
+def axFormat (ax, title, xlabel, ylabel):
+    # Despine
+    ax.spines['right'].set_visible(False)
+    ax.spines['top'].set_visible(False)
+    ax.spines['left'].set_visible(False)
+
+    # Switch off ticks
+    ax.tick_params(axis="both", which="both", bottom="off", top="off", labelbottom="on", left="off", right="off", labelleft="on")
+
+    # Draw horizontal axis lines
+    # vals = ax.get_yticks()
+    # for tick in vals:
+    #     ax.axhline(y=tick, linestyle='dashed', alpha=0.4, color='#eeeeee', zorder=1)
+
+    # Remove title
+    ax.set_title(title)
+
+    # Set x-axis label
+    ax.set_xlabel(xlabel, labelpad=20, weight='bold', size=12)
+
+    # Set y-axis label
+    ax.set_ylabel(ylabel, labelpad=20, weight='bold', size=12)
+
+    # Format y-axis label
+    ax.yaxis.set_major_formatter(StrMethodFormatter('{x:,g}'))
 
 def genProgression(df):
     oneError, oneSEM = list(), list()
@@ -30,29 +66,32 @@ def genProgression(df):
     incorrectError = [df["incorrectDifference"].mean()] * 4
     incorrectSEM = [df["incorrectDifference"].sem()] * 4
 
-    fig, ax = plt.subplots()
+    fig, ax = plt.subplots(figsize=fsize)
     index = np.arange(len(oneError))
     barWidth = .2
 
     alignment = 'edge'
 
-    oneBars = ax.bar(index - barWidth, oneError, barWidth, align = alignment, color = 'b', label = 'One Error', yerr = oneSEM)
-    twoBars = ax.bar(index, twoError, barWidth, align = alignment, color = 'r', label = 'Two Errors', yerr = twoSEM)
-    threeBars = ax.bar(index + barWidth, threeError, barWidth, align = alignment, color = 'y', label = "Three Errors", yerr = threeSEM)
-    incorrectBars = ax.bar(index + barWidth*2, incorrectError, barWidth, align = alignment, color = 'g', label = "Incorrect", yerr = incorrectSEM)
+    oneBars = ax.bar(index - barWidth, oneError, barWidth, align = alignment, color = '#00D9C0', label = 'One Error', yerr = oneSEM)
+    twoBars = ax.bar(index, twoError, barWidth, align = alignment, color = '#86BF91', label = 'Two Errors', yerr = twoSEM)
+    threeBars = ax.bar(index + barWidth, threeError, barWidth, align = alignment, color = '#ADEEE3', label = "Three Errors", yerr = threeSEM)
+    incorrectBars = ax.bar(index + barWidth*2, incorrectError, barWidth, align = alignment, color = '#B8D8D8', label = "Incorrect", yerr = incorrectSEM)
 
-    ax.set_xlabel('Error Type')
-    ax.set_ylabel("Score")
-    ax.set_title("Progression of Scores with increasing errors")
+    title = 'Progression of Scores with increasing errors'
+    xlabel = "Error Type"
+    ylabel = "Score"
+
+    axFormat(ax, title, xlabel, ylabel)
+
     ax.set_xticks(index + barWidth)
     ax.set_xticklabels(("Substituiton", "Insertion", "Deletion", "Capitalization"))
 
     box = ax.get_position()
     ax.set_position([box.x0, box.y0, box.width * 0.8, box.height])
 
-    ax.legend(loc='center left', bbox_to_anchor=(1, 0.5))
+    ax.legend(loc='center left', bbox_to_anchor=(1, 0.5), fancybox=True, shadow=True)
     
-    plt.show()
+    #plt.show()
 
 
 def genPercentProgression(df):
@@ -90,27 +129,30 @@ def genPercentProgression(df):
         i += 1
         i = i % 4
 
-    fig, ax = plt.subplots()
+    fig, ax = plt.subplots(figsize=fsize)
     index = np.arange(len(data12))
-    barWidth = .2
+    barWidth = .4
     alignment = 'edge'
 
-    apc12Label = '1 error to 2 error passwords'
-    apc23Label = '2 error to 3 error passwords'
+    apc12Label = u'1 → 2 error passwords'
+    apc23Label = '2 ' + u"→" + ' 3 error passwords'
 
-    apc12Bar = ax.bar(index, data12, barWidth, align = alignment, color = 'b', label = apc12Label, yerr = data12SEM)
-    apc23Bar = ax.bar(index + barWidth, data23, barWidth, align = alignment, color = 'r', label = apc23Label, yerr = data23SEM)
+    apc12Bar = ax.bar(index, data12, barWidth, align = alignment, color = '#00D9C0', label = apc12Label, yerr = data12SEM)
+    apc23Bar = ax.bar(index + barWidth, data23, barWidth, align = alignment, color = '#86BF91', label = apc23Label, yerr = data23SEM)
 
-    ax.set_xlabel('Variations')
-    ax.set_ylabel("Percentage")
-    ax.set_title("Percent increase between passwords with different number of errors")
+    title = 'Percent increase between passwords with different number of errors'
+    xlabel = "Variations"
+    ylabel = "Percentage"
+
+    axFormat(ax, title, xlabel, ylabel)
+
     ax.set_xticks(index + barWidth)
     ax.set_xticklabels(("Substituiton", "Insertion", "Deletion", "Capitalization"))
 
     box = ax.get_position()
     ax.set_position([box.x0, box.y0, box.width * 0.8, box.height])
 
-    ax.legend(loc='center left', bbox_to_anchor=(1, 0.5))
+    ax.legend(loc='center left', bbox_to_anchor=(1, 0.5), fancybox=True, shadow=True)
     
     plt.show()
 
@@ -129,18 +171,24 @@ def genVisualizer(df):
     lowerL = [calcDF["lower"].mean(), calcDF["lower"].sem()]
     upperL = [calcDF["upper"].mean() - lowerL[0], calcDF["upper"].sem()]
 
-    fig, ax = plt.subplots()
-    index = np.arange(len(upperL))
-    barWidth = .2
+    fig, ax = plt.subplots(figsize=fsize)
+    barWidth = .8
     alignment = 'center'
 
-    lowerBar = ax.bar(1, lowerL[0], barWidth, color = 'b', label = "No deduction", yerr = lowerL[1])
-    upperBar = ax.bar(1, upperL[0], barWidth, bottom = lowerL[0], color = 'r', label = "Deduct one", yerr = upperL[1])
-    topBar = ax.bar(1, 300 - lowerL[0] - upperL[0], barWidth, bottom = upperL[0] + lowerL[0], color = 'g', label = 'Lower to two')
+    lowerBar = ax.bar(1, lowerL[0], barWidth, color = '#00D9C0', label = "No deduction", yerr = lowerL[1])
+    upperBar = ax.bar(1, upperL[0], barWidth, bottom = lowerL[0], color = '#86BF91', label = "Deduct one", yerr = upperL[1])
+    topBar = ax.bar(1, 300 - lowerL[0] - upperL[0], barWidth, bottom = upperL[0] + lowerL[0], color = '#ADEEE3', label = 'Lower to two')
+    leftBar = ax.bar(0, 0, .01)
+    rightBar = ax.bar(2, 0, .01)
 
-    ax.set_ylabel("Score")
-    ax.set_title("Visualization of Score Range Use")
+    title = 'Visualization of Score Range Use'
+    xlabel = ""
+    ylabel = "Score"
+
+    axFormat(ax, title, xlabel, ylabel)
+
     ax.set_xticklabels([])
+    ax.autoscale(enable = False, axis = 'x', tight = True)
 
     ax.legend(fancybox=True, shadow=True)
 
@@ -158,22 +206,24 @@ def genStock(df):
     calcDF["upper"] = calcDF["average"] + calcDF["stdev"]
     calcDF["lower"] = calcDF["average"] - calcDF["stdev"]
 
-    fig, ax = plt.subplots()
+    fig, ax = plt.subplots(figsize=fsize)
     index = np.arange(calcDF["upper"].size)
-    barWidth = .02
-    alignment = 'center'
+    
+    ax.fill_between(calcDF["upper"], calcDF["lower"])
 
-    stockBar = ax.bar(index, calcDF["upper"].tolist(), barWidth, bottom = calcDF["lower"].tolist(), color = 'b', label = 'Deduct One Range')
+    title = 'Password Score Ranges'
+    xlabel = "Password Number"
+    ylabel = "Score"
 
-    ax.set_xlabel('Password Number')
-    ax.set_ylabel("Score")
-    ax.set_title("Password Score Ranges")
-    ax.set_xticks(index + barWidth)
-    ax.set_xticklabels(index)
+    axFormat(ax, title, xlabel, ylabel)
+    
+    # ax.set_xticks(index + barWidth)
+    # ax.set_xticklabels(index)
+    ax.ticklabel_format(style='sci', axis='x', scilimits=(0,0))
 
-    ax.legend(fancybox = True, shadow = True)
+    ax.legend(loc='center left', bbox_to_anchor=(1, 0.5), fancybox = True, shadow = True)
 
-    plt.show()
+    # plt.show()
 
 def genHistogram(df):
     calcDF = pd.DataFrame(dtype = np.float64)
@@ -183,30 +233,57 @@ def genHistogram(df):
         calcDF[p + "Avg"] = df[cols].mean(axis = 1)
 
     calcDF["average"] = calcDF[["oneAvg", "twoAvg", "threeAvg"]].mean(axis = 1)
-    calcDF["stdev"] = calcDF["average"].std()
+    calcDF["stdev"] = calcDF[["oneAvg", "twoAvg", "threeAvg"]].std(axis = 1)
     calcDF["upper"] = calcDF["average"] + calcDF["stdev"]
     calcDF["lower"] = calcDF["average"] - calcDF["stdev"]
     calcDF["size"] = calcDF["upper"] - calcDF["lower"]
 
     print(calcDF["size"].mean())
 
-    fig, ax = plt.subplots()
-    barWidth = .2
+    ax = calcDF.hist(column='size', label = "Number of ranges", bins = 24, range = (0, 250), grid=False, figsize=fsize, color='#00D9C0', rwidth = 1)
 
-    calcDF.hist(column = "size", bins = 100)
+    title = '"Deduct One" Range Size Frequency'
+    xlabel = "Size"
+    ylabel = "Frequency"
 
-    ax.set_xlabel('Bins')
-    ax.set_ylabel("Score")
-    ax.set_title('"Deduct one" Range Size Frequency')
+    ax = ax[0]
+    for x in ax:
 
-    ax.legend(fancybox = True, shadow = True)
+        # Despine
+        x.spines['right'].set_visible(False)
+        x.spines['top'].set_visible(False)
+        x.spines['left'].set_visible(False)
 
-    plt.show()
+        # Switch off ticks
+        x.tick_params(axis="both", which="both", bottom="off", top="off", labelbottom="on", left="off", right="off", labelleft="on")
+
+        # Draw horizontal axis lines
+        vals = x.get_yticks()
+        for tick in vals:
+            x.axhline(y=tick, linestyle='dashed', alpha=0.4, color='#eeeeee', zorder=1)
+
+        # Remove title
+        x.set_title(title)
+
+        # Set x-axis label
+        x.set_xlabel(xlabel, labelpad=20, weight='bold', size=12)
+
+        # Set y-axis label
+        x.set_ylabel(ylabel, labelpad=20, weight='bold', size=12)
+
+        # Format y-axis label
+        x.yaxis.set_major_formatter(StrMethodFormatter('{x:,g}'))
+    
+    #plt.show()
 
 def main():
     data = pd.read_pickle("~/git/TLSHPasswordHash/dataCollection/dataframePickles/data.pkl")
 
-    genHistogram(data)
+    # genProgression(data)
+    # genPercentProgression(data)
+    # genVisualizer(data)
+    genStock(data)
+    # genHistogram(data)
 
     for p in prefix:
         cols = [p + suffix[0], p + suffix[1], p + suffix[2], p + suffix[3]]
@@ -215,7 +292,7 @@ def main():
 
     print(data["threeAvg"].mean() - data["oneAvg"].mean())
 
-
+    plt.show()
 
 
 if __name__ == '__main__':
