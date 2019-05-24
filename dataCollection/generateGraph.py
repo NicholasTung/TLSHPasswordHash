@@ -110,10 +110,10 @@ def genPercentProgression(df):
     for s in resultNames:
         if s[-2:] == "12":
             suf = suffix[i]
-            calcDF[s] = df["two" + suf].subtract(df["one" + suf]).divide(df["one" + suf])
+            calcDF[s] = df["two" + suf].subtract(df["one" + suf]).divide(df["one" + suf]) * 100
         else:
             suf = suffix[i]
-            calcDF[s] = ((df["three" + suf] - df["two" + suf]) / df["two" + suf])
+            calcDF[s] = ((df["three" + suf] - df["two" + suf]) / df["two" + suf]) * 100
 
         i += 1
         i = i % 4
@@ -280,9 +280,9 @@ def main():
     data = pd.read_pickle("~/git/TLSHPasswordHash/dataCollection/dataframePickles/data.pkl")
 
     # genProgression(data)
-    # genPercentProgression(data)
+    genPercentProgression(data)
     # genVisualizer(data)
-    genStock(data)
+    # genStock(data)
     # genHistogram(data)
 
     for p in prefix:
@@ -291,6 +291,8 @@ def main():
         print(data[cols].mean(axis = 1).mean())
 
     print(data["threeAvg"].mean() - data["oneAvg"].mean())
+
+    print(data["incorrectDifference"].size)
 
     plt.show()
 
